@@ -1,12 +1,12 @@
-const User = require("user")
+const User = require("./user")
 const path = require("path") //modulo para manipular caminhos
 const fs = require("fs")// modulo para manipular arquivos file system
 
 class userService{
     constructor(){ //quando não passa parâmetro traz um valor fixo, que não muda
         this.filePath = path.join(__dirname, 'user.json')
-        this.users = [] //[] é um array, esse array é pra armazenar o user
-        this.nextID = 1 //contador para gerar id
+        this.users = this.loadUsers()
+        this.nextID = this.getNextId()
     }
 
     loadUsers(){
@@ -21,22 +21,39 @@ class userService{
         return [] //retorna um array vazio
     }
 
-    getNextId(users){
+    getNextId(users){ //função para buscar próximo id
         try{
         if(this.users.length === 0) return 1
-            return Math.max(...this.users.map(user => user.id))+1
+        return Math.max(...this.users.map(user => user.id))+1
         }catch (erro){
             console.log("Erro ao buscar próximo id", erro)
         }
     }
+
+    saveUsers(){ //função para salvar os usuários
+        try{
+            fs.writeFileSync(this.filePath, JSON.stringify(this.users))
+        }catch(erro){
+            console.log("Erro ao salvar arquivo", erro)
+        }
+    }
     
     addUser(nome,email){
-        const user = new User(this.nextID++, nome, email)  //cria novo user, e o novoid++ é pra toda vez aumentar um no id
-        this.users.push(user) //da um push pra armazenar esse user no array de usuarios
-        return user
+        try{
+            const user = new User(this.nextID++, nome, email)  //cria novo user, e o novoid++ é pra toda vez aumentar um no id
+            this.users.push(user) //da um push pra armazenar esse user no array de usuarios
+            this.saveUsers()
+            return user
+        }catch(erro){
+            console.log("Erro ao adicionar usuário", erro)
+        }
     }
     getUsers(){
-        return this.users
+        try{
+            return this.users
+        }catch(erro){
+            console.log("Erro ao buscar usuários", erro)
+        }
     }
 }
 
