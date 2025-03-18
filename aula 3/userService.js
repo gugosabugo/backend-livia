@@ -55,6 +55,23 @@ class userService{
             console.log("Erro ao buscar usuários", erro)
         }
     }
+
+    deleteUser(id){
+        try {
+            this.users = this.users.filter(user => user.id !== id)
+            this.saveUsers()
+        } catch (erro) {
+            console.log("Erro ao deletar usuário", erro)
+        }
+    }
+
+    updateUser(id){
+        try {
+            
+        } catch (erro) {
+            console.log("Erro ao atualizar informações", erro)
+        }
+    }
 }
 
 module.exports = new userService

@@ -20,6 +20,16 @@ app.get("/users", (req, res)=>{
     res.json(userService.getUsers())
 })
 
+app.delete("/users/:id", (req, res)=>{
+    const id = parseInt(req.params.id) //converte id em numero
+    try {
+        const resultado = userService.deleteUser(id) //tenta excluir o usuario
+        res.status(200).json(resultado) //retorna mensagem de sucesso
+    } catch (erro) {
+        res.status(404).json({error: erro.message}) //retorna mensagem de erro
+    }
+})
+
 const port = 3000
 app.listen (port, () =>{
     console.log("O servidor está rodando na porta: ", port)
