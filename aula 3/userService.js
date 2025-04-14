@@ -2,6 +2,7 @@ const User = require("./user")
 const path = require("path") //modulo para manipular caminhos
 const fs = require("fs")// modulo para manipular arquivos file system
 const bcrypt = require("bcryptjs")// modulo para criptografar senha
+const mysql = require("mysql")// importando funções de conexão com o mysql
 
 class userService {
     constructor() { //quando não passa parâmetro traz um valor fixo, que não muda
@@ -46,10 +47,13 @@ class userService {
                 throw new Error("Email já cadastrado") //se o email já existir, vai dar erro
             }
             const senhaCripto = await bcrypt.hash(senha, 10)
-            const user = new User(this.nextID++, nome, email, senhaCripto, endereco, telefone, cpf)  //cria novo user, e o novoid++ é pra toda vez aumentar um no id
-            this.users.push(user) //da um push pra armazenar esse user no array de usuarios
-            this.saveUsers()
-            return user
+            const resultados = await mysql.execute(
+                `INSERT INTO usuario (nome, email, senha, cpf, endereco, telefone)
+	                  VALUES (?, ?, ?, ?, ?, ?);`
+                      [nome, email, senhaCripto, endereco, telefone, cpf]
+            )
+            return resultados
+            resultados.status(201)
         } catch (erro) {
             console.log("Erro ao adicionar usuário", erro)
             throw erro
