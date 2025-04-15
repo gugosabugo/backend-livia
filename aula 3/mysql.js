@@ -1,11 +1,11 @@
-const mysql = require('mysql');
+const mysql = require('mysql2');
 
-const pool = mysql.createPool({
+const pool = mysql.createConnection({
     "user":"root",
     "password":"root",
-    "database":"mydb",
+    "database":"pfinal_livia",
     "host":"localhost",
-    "port":"3306"
+    "port":"330"
 });
 
 exports.execute = (query, param = [], varPool = pool) => {

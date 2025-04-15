@@ -8,12 +8,12 @@ app.use(express.json()) //ativa o json no express
 //rota para usuario ser criado
 app.post("/users", async (req, res) => {
     try {
-        const { nome, email, senha, endereco, telefone, cpf } = req.body //passa um arquivo via json pra nome e email
+        const { nome, email, senha, cpf, endereco, telefone } = req.body //passa um arquivo via json pra nome e email
         if (!nome || !email || !endereco || !senha || !telefone || !cpf) { //caso o nome e o email sejam diferentes de (estejam vazios) vai dar erro
             return res.status(400).json({ error: "Nome, email, endereço, senha, telefone e cpf são obrigatórios" }) //mensagem enviada caso dê erro (nome ou email vazios)
         }
-        const user = await userService.addUser(nome, email, senha, endereco, telefone, cpf)
-        res.status(200).json({ user })
+        const user = await userService.addUser(nome, email, senha, cpf, endereco, telefone)
+        res.status(200).json({ message: "Usuário cadastrado com sucesso", user }) //caso não dê erro, retorna a mensagem de sucesso
     } catch (erro) {
         res.status(400).json({ error: erro.message })
     }
@@ -36,9 +36,9 @@ app.delete("/users/:id", (req, res) => {
 
 app.put("/users/:id", async (req, res) => {
     const id = parseInt(req.params.id);
-    const { nome, email, senha, endereco, telefone, cpf } = req.body;
+    const { nome, email, senha, cpf, endereco, telefone } = req.body;
     try {
-        const resultado = await userService.updateUser(id, nome, email, senha, endereco, telefone, cpf);
+        const resultado = await userService.updateUser(id, nome, email, senha, cpf, endereco, telefone);
         if (!resultado) {
             return res.status(404).json({ error: "Usuário não encontrado" });
         }
