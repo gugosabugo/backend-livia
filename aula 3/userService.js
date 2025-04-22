@@ -19,9 +19,13 @@ class userService {
             throw erro
         }
     }
-    getUsers() {
+    async getUser(id) {
         try {
-            return this.users
+            const resultado = await mysql.execute(
+                `SELECT idusuario FROM usuarios WHERE idusuario = ?;`,
+                [id]
+            )
+            return resultado[0].idusuario
         } catch (erro) {
             console.log("Erro ao buscar usuários", erro)
         }
@@ -29,6 +33,11 @@ class userService {
 
     async deleteUser(id) {
         try {
+            const user = await this.getUser(id)
+            if (user.length == 0) {
+                console.log("Usuário não encontrado")
+                return
+            }
             const resultados = await mysql.execute(
                 `DELETE FROM usuarios
                 	   WHERE idusuario = ?;`,

@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "type": "node",
+        "request": "launch",
+        "name": "Iniciar API Express",
+        "skipFiles": ["<node_internals>/**"],
+        "program": "${workspaceFolder}/aula 3/index.js", // Altere para seu arquivo de entrada
+        "env": {
+          "NODE_ENV": "development"
+        },
+        "envFile": "${workspaceFolder}/.env", // Se você usa dotenv
+        "runtimeArgs": ["--nolazy"],
+        "console": "integratedTerminal"
+      }
+    ]
+  }
+  
